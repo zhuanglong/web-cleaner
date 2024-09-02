@@ -1,5 +1,5 @@
 import { type PlasmoCSConfig } from "plasmo"
-import { useEffect } from "react"
+import { cloneElement, useEffect } from "react"
 
 import { useStorage } from "@plasmohq/storage/hook"
 
@@ -49,7 +49,42 @@ export default function csdn() {
     addCss(cssText)
   }
 
-  function copyCodeFunc() {}
+  function copyCodeFunc() {
+    const cssText = `
+      #content_views pre,
+      #content_views pre code {
+        -webkit-touch-callout: auto !important;
+        -webkit-user-select: auto !important;
+        -khtml-user-select: auto !important;
+        -moz-user-select: auto !important;
+        -ms-user-select: auto !important;
+        user-select: auto !important;
+      }
+    `
+    addCss(cssText)
+
+    const contentViewsEle = document.querySelector("#content_views")
+    contentViewsEle.replaceWith(contentViewsEle.cloneNode(true))
+
+    const buttons = document.querySelectorAll<HTMLElement>(".hljs-button")
+    buttons.forEach((btn) => {
+      btn.dataset.title = "复制"
+      btn.setAttribute("onclick", "")
+      btn.addEventListener("click", (e) => {
+        e.stopPropagation();
+
+        const target = e.target as HTMLElement
+        const preEle = target.closest("pre")
+        const codeEle = preEle.querySelector("code")
+        navigator.clipboard.writeText(codeEle.innerText)
+
+        target.dataset.title = "复制成功"
+        setTimeout(() => {
+          target.dataset.title = "复制"
+        }, 1000)
+      })
+    })
+  }
 
   function closeFollowFunc() {
     const readMore = document.querySelector(".btn-readmore")
