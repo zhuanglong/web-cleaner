@@ -66,13 +66,27 @@ export default function csdn() {
   }
 
   function closeLoginModalFunc() {
-    const cssText = `
-      .passport-login-container,
-      .passport-login-tip-container {
-        display: none !important;
+    const observer1 = new MutationObserver(() => {
+      const loginEle = document.querySelector<HTMLElement>(
+        ".passport-login-container .passport-login-box > img"
+      )
+      if (loginEle) {
+        loginEle.click()
+        observer1.disconnect()
       }
-    `
-    addCss(cssText)
+    })
+    observer1.observe(document.body, { childList: true, subtree: true })
+
+    const observer2 = new MutationObserver(() => {
+      const loginEle = document.querySelector<HTMLElement>(
+        ".passport-login-tip-container > span"
+      )
+      if (loginEle) {
+        loginEle.click()
+        observer2.disconnect()
+      }
+    })
+    observer2.observe(document.body, { childList: true, subtree: true })
   }
 
   function closeRightToolBarFunc() {
