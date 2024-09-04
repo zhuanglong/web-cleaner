@@ -1,6 +1,7 @@
 import { type PlasmoCSConfig } from "plasmo"
 import { cloneElement, useEffect } from "react"
 
+import { useMessage } from "@plasmohq/messaging/hook"
 import { useStorage } from "@plasmohq/storage/hook"
 
 import { addCss } from "~utils/tools"
@@ -33,8 +34,14 @@ export default function csdn() {
     closeBottomToolBar
   ])
 
+  useMessage(async (req, res) => {
+    if (req.name === "csdn-isShow") {
+      res.send({ isShow: true })
+    }
+  })
+
   function closeAdsFunc() {
-    const cssText = `
+    addCss(`
       #asideWriteGuide,
       .remuneration-box,
       #remuneration,
@@ -45,12 +52,11 @@ export default function csdn() {
       #dmp_ad_58 {
         display: none !important;
       }
-    `
-    addCss(cssText)
+    `)
   }
 
   function copyCodeFunc() {
-    const cssText = `
+    addCss(`
       #content_views pre,
       #content_views pre code {
         -webkit-touch-callout: auto !important;
@@ -60,8 +66,7 @@ export default function csdn() {
         -ms-user-select: auto !important;
         user-select: auto !important;
       }
-    `
-    addCss(cssText)
+    `)
 
     const contentViewsEle = document.querySelector("#content_views")
     contentViewsEle.replaceWith(contentViewsEle.cloneNode(true))
@@ -71,7 +76,7 @@ export default function csdn() {
       btn.dataset.title = "复制"
       btn.setAttribute("onclick", "")
       btn.addEventListener("click", (e) => {
-        e.stopPropagation();
+        e.stopPropagation()
 
         const target = e.target as HTMLElement
         const preEle = target.closest("pre")
@@ -89,14 +94,14 @@ export default function csdn() {
   function closeFollowFunc() {
     const readMore = document.querySelector(".btn-readmore")
     if (readMore) {
-      const css = `
-        #article_content{
+      addCss(`
+        #article_content {
           height: auto !important;
         }
         .hide-article-box {
           z-index: -1 !important;
-        }`
-      addCss(css)
+        }
+      `)
     }
   }
 
@@ -125,21 +130,19 @@ export default function csdn() {
   }
 
   function closeRightToolBarFunc() {
-    const cssText = `
+    addCss(`
       .csdn-side-toolbar  {
         display: none !important;
       }
-    `
-    addCss(cssText)
+    `)
   }
 
   function closeBottomToolBarFunc() {
-    const cssText = `
+    addCss(`
       .more-toolbox-new .left-toolbox {
         position: relative !important;
         left: unset !important;
       }
-    `
-    addCss(cssText)
+    `)
   }
 }
